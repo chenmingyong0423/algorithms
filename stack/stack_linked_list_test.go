@@ -64,10 +64,10 @@ func TestLinkedList_Push(t *testing.T) {
 
 func TestLinkedList_Pop(t *testing.T) {
 	testCases := []struct {
-		name            string
-		stack           *LinkedList[int]
-		stackElements   []int
-		expectedElement int
+		name          string
+		stack         *LinkedList[int]
+		stackElements []int
+		want          int
 	}{
 		{
 			name: "pop element from empty stack",
@@ -75,8 +75,8 @@ func TestLinkedList_Pop(t *testing.T) {
 				s := NewStackLinkedList[int]()
 				return s
 			}(),
-			stackElements:   []int{},
-			expectedElement: 0,
+			stackElements: []int{},
+			want:          0,
 		},
 		{
 			name: "pop element from the stack with one element",
@@ -85,8 +85,8 @@ func TestLinkedList_Pop(t *testing.T) {
 				s.Push(1)
 				return s
 			}(),
-			stackElements:   []int{},
-			expectedElement: 1,
+			stackElements: []int{},
+			want:          1,
 		},
 		{
 			name: "pop element from stack with more than one element",
@@ -99,14 +99,14 @@ func TestLinkedList_Pop(t *testing.T) {
 			stackElements: []int{
 				1,
 			},
-			expectedElement: 2,
+			want: 2,
 		},
 	}
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
 			element := tc.stack.Pop()
 			assert.ElementsMatch(t, tc.stackElements, tc.stack.toSlice())
-			assert.Equal(t, tc.expectedElement, element)
+			assert.Equal(t, tc.want, element)
 		})
 	}
 }
@@ -158,27 +158,27 @@ func TestLinkedList_IsEmpty(t *testing.T) {
 		name  string
 		stack *LinkedList[int]
 
-		wantBool bool
+		want bool
 	}{
 		{
-			name:     "empty stack",
-			stack:    NewStackLinkedList[int](),
-			wantBool: true,
+			name:  "check empty stack",
+			stack: NewStackLinkedList[int](),
+			want:  true,
 		},
 		{
-			name: "non-empty stack",
+			name: "check non-empty stack",
 			stack: func() *LinkedList[int] {
 				s := NewStackLinkedList[int]()
 				s.Push(1)
 				return s
 			}(),
 
-			wantBool: false,
+			want: false,
 		},
 	}
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			assert.Equal(t, tc.wantBool, tc.stack.IsEmpty())
+			assert.Equal(t, tc.want, tc.stack.IsEmpty())
 		})
 	}
 }
