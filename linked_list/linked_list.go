@@ -22,6 +22,7 @@ type LinkedList[T any] interface {
 	GetFirst() (T, bool)
 	GetLast() (T, bool)
 	Set(index int, e T) bool
+	Insert(index int, e ...T) bool
 	RemoveFirst() (T, bool)
 	RemoveLast() (T, bool)
 	Remove(index int) (T, bool)

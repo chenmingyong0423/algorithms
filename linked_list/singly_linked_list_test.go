@@ -428,7 +428,7 @@ func TestSinglyLinkedList_Remove(t *testing.T) {
 			name:      "index is greater than zero and less than size of list",
 			list:      NewSinglyLinkedList[int](1, 2, 3, 4, 5),
 			index:     2,
-			wantValue: 2,
+			wantValue: 3,
 			wantBool:  true,
 		},
 	}
@@ -535,6 +535,98 @@ func TestSinglyLinkedList_ToSlice(t *testing.T) {
 		t.Run(tc.name, func(t *testing.T) {
 			got := tc.list.ToSlice()
 			assert.Equal(t, tc.want, got)
+		})
+	}
+}
+
+func TestSinglyLinkedList_Insert(t *testing.T) {
+	testCases := []struct {
+		name     string
+		list     *SinglyLinkedList[int]
+		index    int
+		elements []int
+
+		wantBool         bool
+		wantListElements []int
+	}{
+		{
+			name:     "index is less than zero",
+			list:     NewSinglyLinkedList[int](1, 2, 5),
+			index:    -1,
+			elements: []int{3, 4},
+			wantBool: false,
+		},
+		{
+			name:     "index is greater than size of list",
+			list:     NewSinglyLinkedList[int](1, 2, 3),
+			index:    3,
+			elements: []int{4, 5},
+			wantBool: false,
+		},
+		{
+			name:             "insert one element at the beginning of empty list",
+			list:             NewSinglyLinkedList[int](),
+			index:            0,
+			elements:         []int{1},
+			wantBool:         true,
+			wantListElements: []int{1},
+		},
+		{
+			name:             "insert one element at the beginning of the list",
+			list:             NewSinglyLinkedList[int](2, 3),
+			index:            0,
+			elements:         []int{1},
+			wantBool:         true,
+			wantListElements: []int{1, 2, 3},
+		},
+		{
+			name:             "insert multiple elements at the beginning of the list",
+			list:             NewSinglyLinkedList[int](3, 4),
+			index:            0,
+			elements:         []int{1, 2},
+			wantBool:         true,
+			wantListElements: []int{1, 2, 3, 4},
+		},
+		{
+			name:             "insert one element at the end of the list",
+			list:             NewSinglyLinkedList[int](1, 2, 3),
+			index:            2,
+			elements:         []int{4},
+			wantBool:         true,
+			wantListElements: []int{1, 2, 3, 4},
+		},
+		{
+			name:             "insert multiple elements at the end of the list",
+			list:             NewSinglyLinkedList[int](1, 2, 3),
+			index:            2,
+			elements:         []int{4, 5},
+			wantBool:         true,
+			wantListElements: []int{1, 2, 3, 4, 5},
+		},
+		{
+			name:             "insert one element in the middle of the list",
+			list:             NewSinglyLinkedList[int](1, 2, 4, 5),
+			index:            2,
+			elements:         []int{3},
+			wantBool:         true,
+			wantListElements: []int{1, 2, 3, 4, 5},
+		},
+		{
+			name:             "insert multiple elements in the middle of the list",
+			list:             NewSinglyLinkedList[int](1, 2, 5, 6),
+			index:            2,
+			elements:         []int{3, 4},
+			wantBool:         true,
+			wantListElements: []int{1, 2, 3, 4, 5, 6},
+		},
+	}
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			got := tc.list.Insert(tc.index, tc.elements...)
+			assert.Equal(t, tc.wantBool, got)
+			if got {
+				assert.Equal(t, tc.wantListElements, tc.list.ToSlice())
+			}
 		})
 	}
 }

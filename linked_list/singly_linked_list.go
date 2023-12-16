@@ -1,7 +1,7 @@
 // Copyright 2023 chenmingyong0423
 
 // Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
+// you may not use the file except in compliance with the License.
 // You may obtain a copy of the License at
 
 //     http://www.apache.org/licenses/LICENSE-2.0
@@ -69,7 +69,7 @@ func (s *SinglyLinkedList[T]) Prepend(elements ...T) {
 	}
 }
 
-// GetFirst returns the first element in this list.
+// GetFirst returns the first element in the list.
 // If the list is empty, b return false
 func (s *SinglyLinkedList[T]) GetFirst() (t T, b bool) {
 	if s.IsEmpty() {
@@ -78,7 +78,7 @@ func (s *SinglyLinkedList[T]) GetFirst() (t T, b bool) {
 	return s.head.Val, true
 }
 
-// GetLast returns the last element in this list.
+// GetLast returns the last element in the list.
 // If the list is empty, b return false
 func (s *SinglyLinkedList[T]) GetLast() (t T, b bool) {
 	if s.IsEmpty() {
@@ -87,7 +87,7 @@ func (s *SinglyLinkedList[T]) GetLast() (t T, b bool) {
 	return s.tail.Val, true
 }
 
-// Get returns the element at the specified position in this list.
+// Get returns the element at the specified position in the list.
 // If the index is invalid, b return false
 func (s *SinglyLinkedList[T]) Get(index int) (t T, b bool) {
 	if s.isInvalidIndex(index) {
@@ -99,7 +99,7 @@ func (s *SinglyLinkedList[T]) Get(index int) (t T, b bool) {
 	return node.Val, true
 }
 
-// Set sets the element at the specified position in this list.
+// Set sets the element at the specified position in the list.
 // If the index is invalid, b return false
 func (s *SinglyLinkedList[T]) Set(index int, e T) bool {
 	if index < 0 || index > s.Size()-1 {
@@ -112,7 +112,39 @@ func (s *SinglyLinkedList[T]) Set(index int, e T) bool {
 	return true
 }
 
-// RemoveFirst removes the first element from this list.
+// Insert inserts the specified elements at the specified position in the list.
+func (s *SinglyLinkedList[T]) Insert(index int, e ...T) bool {
+	if s.isInvalidIndex(index) {
+		if index == 0 {
+			s.Add(e...)
+			return true
+		}
+		return false
+	}
+
+	if index == 0 {
+		s.Prepend(e...)
+		return true
+	}
+	if index == s.Size()-1 {
+		s.Append(e...)
+		return true
+	}
+	prev := s.head
+	for i := 0; i < index-1; i, prev = i+1, prev.Next {
+	}
+	oldNext := prev.Next
+	for _, val := range e {
+		node := &singlyNode[T]{Val: val}
+		prev.Next = node
+		prev = node
+		s.size++
+	}
+	prev.Next = oldNext
+	return true
+}
+
+// RemoveFirst removes the first element from the list.
 // If the list is empty, b return false
 func (s *SinglyLinkedList[T]) RemoveFirst() (t T, b bool) {
 	if s.IsEmpty() {
@@ -145,7 +177,7 @@ func (s *SinglyLinkedList[T]) RemoveLast() (t T, b bool) {
 	return node.Val, true
 }
 
-// Remove removes the element at the specified position in this list.
+// Remove removes the element at the specified position in the list.
 // If the index is invalid, b return false
 func (s *SinglyLinkedList[T]) Remove(index int) (t T, b bool) {
 	if s.isInvalidIndex(index) {
