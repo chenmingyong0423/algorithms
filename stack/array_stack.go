@@ -14,52 +14,54 @@
 
 package stack
 
-type Slice[T any] struct {
+var _ Stack[any] = (*ArrayStack[any])(nil)
+
+type ArrayStack[T any] struct {
 	elements []T
 }
 
 // NewStackSlice returns a new stack
-func NewStackSlice[T any]() *Slice[T] {
-	return &Slice[T]{}
+func NewStackSlice[T any]() *ArrayStack[T] {
+	return &ArrayStack[T]{}
 }
 
 // NewStackSliceWithSize returns a new stack with size
-func NewStackSliceWithSize[T any](size int) *Slice[T] {
-	return &Slice[T]{
+func NewStackSliceWithSize[T any](size int) *ArrayStack[T] {
+	return &ArrayStack[T]{
 		elements: make([]T, 0, size),
 	}
 }
 
 // Push pushes an element onto the top of the stack
-func (s *Slice[T]) Push(e T) {
+func (s *ArrayStack[T]) Push(e T) {
 	s.elements = append(s.elements, e)
 }
 
 // Pop removes the element at the top of the stack and returns that element
-func (s *Slice[T]) Pop() (t T) {
+func (s *ArrayStack[T]) Pop() (t T, b bool) {
 	if !s.IsEmpty() {
 		lastIdx := len(s.elements) - 1
-		t = s.elements[lastIdx]
+		t, b = s.elements[lastIdx], true
 		s.elements = s.elements[:lastIdx]
 	}
-	return t
+	return
 }
 
 // Peek returns the element at the top of the stack
-func (s *Slice[T]) Peek() (t T) {
+func (s *ArrayStack[T]) Peek() (t T, b bool) {
 	if !s.IsEmpty() {
 		lastIdx := len(s.elements) - 1
-		t = s.elements[lastIdx]
+		t, b = s.elements[lastIdx], true
 	}
-	return t
+	return
 }
 
 // IsEmpty checks whether the stack is empty
-func (s *Slice[T]) IsEmpty() bool {
+func (s *ArrayStack[T]) IsEmpty() bool {
 	return len(s.elements) == 0
 }
 
 // Size returns the size of the stack
-func (s *Slice[T]) Size() int {
+func (s *ArrayStack[T]) Size() int {
 	return len(s.elements)
 }

@@ -16,8 +16,12 @@ package stack
 
 type Stack[T any] interface {
 	Push(e T)
-	Pop() (t T)
-	Peek() (t T)
+	// Pop removes the element at the top of the stack and returns that element
+	// If the stack is empty, b return false
+	Pop() (T, bool)
+	// Peek returns the element at the top of the stack
+	// If the stack is empty, b return false
+	Peek() (T, bool)
 	IsEmpty() bool
 	Size() int
 }

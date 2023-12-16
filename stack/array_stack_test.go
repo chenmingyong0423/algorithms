@@ -23,7 +23,7 @@ import (
 func TestSlice_Push(t *testing.T) {
 	testCases := []struct {
 		name          string
-		stack         *Slice[int]
+		stack         *ArrayStack[int]
 		element       int
 		stackElements []int
 	}{
@@ -37,7 +37,7 @@ func TestSlice_Push(t *testing.T) {
 		},
 		{
 			name: "push element to non-empty stack",
-			stack: func() *Slice[int] {
+			stack: func() *ArrayStack[int] {
 				s := NewStackSlice[int]()
 				s.Push(1)
 				return s
@@ -60,67 +60,75 @@ func TestSlice_Push(t *testing.T) {
 func TestSlice_Pop(t *testing.T) {
 	testCases := []struct {
 		name          string
-		stack         *Slice[int]
+		stack         *ArrayStack[int]
 		stackElements []int
-		want          int
+		wantValue     int
+		wantBool      bool
 	}{
 		{
 			name: "pop element from empty stack",
-			stack: func() *Slice[int] {
+			stack: func() *ArrayStack[int] {
 				s := NewStackSlice[int]()
 				return s
 			}(),
 			stackElements: []int{},
-			want:          0,
+			wantValue:     0,
+			wantBool:      false,
 		},
 		{
 			name: "pop element from non-empty stack",
-			stack: func() *Slice[int] {
+			stack: func() *ArrayStack[int] {
 				s := NewStackSlice[int]()
 				s.Push(1)
 				return s
 			}(),
 			stackElements: []int{},
-			want:          1,
+			wantValue:     1,
+			wantBool:      true,
 		},
 	}
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			got := tc.stack.Pop()
+			got, b := tc.stack.Pop()
 			assert.ElementsMatch(t, tc.stackElements, tc.stack.elements)
-			assert.Equal(t, tc.want, got)
+			assert.Equal(t, tc.wantValue, got)
+			assert.Equal(t, tc.wantBool, b)
 		})
 	}
 }
 
 func TestSlice_Peek(t *testing.T) {
 	testCases := []struct {
-		name  string
-		stack *Slice[int]
-		want  int
+		name      string
+		stack     *ArrayStack[int]
+		wantValue int
+		wantBool  bool
 	}{
 		{
+			name: "peek element from empty stack",
+			stack: func() *ArrayStack[int] {
+				s := NewStackSlice[int]()
+				return s
+			}(),
+			wantValue: 0,
+			wantBool:  false,
+		},
+		{
 			name: "peek element from non-empty stack",
-			stack: func() *Slice[int] {
+			stack: func() *ArrayStack[int] {
 				s := NewStackSlice[int]()
 				s.Push(1)
 				return s
 			}(),
-			want: 1,
-		},
-		{
-			name: "peek element from empty stack",
-			stack: func() *Slice[int] {
-				s := NewStackSlice[int]()
-				return s
-			}(),
-			want: 0,
+			wantValue: 1,
+			wantBool:  true,
 		},
 	}
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			got := tc.stack.Peek()
-			assert.Equal(t, tc.want, got)
+			got, b := tc.stack.Peek()
+			assert.Equal(t, tc.wantValue, got)
+			assert.Equal(t, tc.wantBool, b)
 		})
 	}
 }
@@ -128,12 +136,12 @@ func TestSlice_Peek(t *testing.T) {
 func TestSlice_IsEmpty(t *testing.T) {
 	testCases := []struct {
 		name  string
-		stack *Slice[int]
+		stack *ArrayStack[int]
 		want  bool
 	}{
 		{
 			name: "check empty stack",
-			stack: func() *Slice[int] {
+			stack: func() *ArrayStack[int] {
 				s := NewStackSlice[int]()
 				return s
 			}(),
@@ -141,7 +149,7 @@ func TestSlice_IsEmpty(t *testing.T) {
 		},
 		{
 			name: "check non-empty stack",
-			stack: func() *Slice[int] {
+			stack: func() *ArrayStack[int] {
 				s := NewStackSlice[int]()
 				s.Push(1)
 				return s
@@ -160,12 +168,12 @@ func TestSlice_IsEmpty(t *testing.T) {
 func TestSlice_Size(t *testing.T) {
 	testCases := []struct {
 		name  string
-		stack *Slice[int]
+		stack *ArrayStack[int]
 		want  int
 	}{
 		{
 			name: "empty stack",
-			stack: func() *Slice[int] {
+			stack: func() *ArrayStack[int] {
 				s := NewStackSlice[int]()
 				return s
 			}(),
@@ -173,7 +181,7 @@ func TestSlice_Size(t *testing.T) {
 		},
 		{
 			name: "non-empty stack",
-			stack: func() *Slice[int] {
+			stack: func() *ArrayStack[int] {
 				s := NewStackSlice[int]()
 				s.Push(1)
 				return s

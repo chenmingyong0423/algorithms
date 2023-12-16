@@ -21,20 +21,20 @@ import (
 )
 
 func TestNewStackLinkedList(t *testing.T) {
-	stackLinkedList := NewStackLinkedList[int]()
+	stackLinkedList := NewLinkedListStack[int]()
 	assert.NotNil(t, stackLinkedList)
 }
 
 func TestLinkedList_Push(t *testing.T) {
 	testCases := []struct {
 		name          string
-		stack         *LinkedList[int]
+		stack         *LinkedListStack[int]
 		element       int
 		stackElements []int
 	}{
 		{
 			name:    "push element to empty stack",
-			stack:   NewStackLinkedList[int](),
+			stack:   NewLinkedListStack[int](),
 			element: 1,
 			stackElements: []int{
 				1,
@@ -42,8 +42,8 @@ func TestLinkedList_Push(t *testing.T) {
 		},
 		{
 			name: "push element to non-empty stack",
-			stack: func() *LinkedList[int] {
-				s := NewStackLinkedList[int]()
+			stack: func() *LinkedListStack[int] {
+				s := NewLinkedListStack[int]()
 				s.Push(1)
 				return s
 			}(),
@@ -65,33 +65,36 @@ func TestLinkedList_Push(t *testing.T) {
 func TestLinkedList_Pop(t *testing.T) {
 	testCases := []struct {
 		name          string
-		stack         *LinkedList[int]
+		stack         *LinkedListStack[int]
 		stackElements []int
-		want          int
+		wantValue     int
+		wantBool      bool
 	}{
 		{
 			name: "pop element from empty stack",
-			stack: func() *LinkedList[int] {
-				s := NewStackLinkedList[int]()
+			stack: func() *LinkedListStack[int] {
+				s := NewLinkedListStack[int]()
 				return s
 			}(),
 			stackElements: []int{},
-			want:          0,
+			wantValue:     0,
+			wantBool:      false,
 		},
 		{
 			name: "pop element from the stack with one element",
-			stack: func() *LinkedList[int] {
-				s := NewStackLinkedList[int]()
+			stack: func() *LinkedListStack[int] {
+				s := NewLinkedListStack[int]()
 				s.Push(1)
 				return s
 			}(),
 			stackElements: []int{},
-			want:          1,
+			wantValue:     1,
+			wantBool:      true,
 		},
 		{
 			name: "pop element from stack with more than one element",
-			stack: func() *LinkedList[int] {
-				s := NewStackLinkedList[int]()
+			stack: func() *LinkedListStack[int] {
+				s := NewLinkedListStack[int]()
 				s.Push(1)
 				s.Push(2)
 				return s
@@ -99,56 +102,63 @@ func TestLinkedList_Pop(t *testing.T) {
 			stackElements: []int{
 				1,
 			},
-			want: 2,
+			wantValue: 2,
+			wantBool:  true,
 		},
 	}
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			element := tc.stack.Pop()
+			element, b := tc.stack.Pop()
 			assert.ElementsMatch(t, tc.stackElements, tc.stack.toSlice())
-			assert.Equal(t, tc.want, element)
+			assert.Equal(t, tc.wantValue, element)
+			assert.Equal(t, tc.wantBool, b)
 		})
 	}
 }
 
 func TestLinkedList_Peek(t *testing.T) {
 	testCases := []struct {
-		name            string
-		stack           *LinkedList[int]
-		expectedElement int
+		name      string
+		stack     *LinkedListStack[int]
+		wantValue int
+		wantBool  bool
 	}{
 		{
 			name: "peek element from empty stack",
-			stack: func() *LinkedList[int] {
-				s := NewStackLinkedList[int]()
+			stack: func() *LinkedListStack[int] {
+				s := NewLinkedListStack[int]()
 				return s
 			}(),
-			expectedElement: 0,
+			wantValue: 0,
+			wantBool:  false,
 		},
 		{
 			name: "peek element from the stack with one element",
-			stack: func() *LinkedList[int] {
-				s := NewStackLinkedList[int]()
+			stack: func() *LinkedListStack[int] {
+				s := NewLinkedListStack[int]()
 				s.Push(1)
 				return s
 			}(),
-			expectedElement: 1,
+			wantValue: 1,
+			wantBool:  true,
 		},
 		{
 			name: "peek element from stack with more than one element",
-			stack: func() *LinkedList[int] {
-				s := NewStackLinkedList[int]()
+			stack: func() *LinkedListStack[int] {
+				s := NewLinkedListStack[int]()
 				s.Push(1)
 				s.Push(2)
 				return s
 			}(),
-			expectedElement: 2,
+			wantValue: 2,
+			wantBool:  true,
 		},
 	}
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			element := tc.stack.Peek()
-			assert.Equal(t, tc.expectedElement, element)
+			element, b := tc.stack.Peek()
+			assert.Equal(t, tc.wantValue, element)
+			assert.Equal(t, tc.wantBool, b)
 		})
 	}
 }
@@ -156,19 +166,19 @@ func TestLinkedList_Peek(t *testing.T) {
 func TestLinkedList_IsEmpty(t *testing.T) {
 	testCases := []struct {
 		name  string
-		stack *LinkedList[int]
+		stack *LinkedListStack[int]
 
 		want bool
 	}{
 		{
 			name:  "check empty stack",
-			stack: NewStackLinkedList[int](),
+			stack: NewLinkedListStack[int](),
 			want:  true,
 		},
 		{
 			name: "check non-empty stack",
-			stack: func() *LinkedList[int] {
-				s := NewStackLinkedList[int]()
+			stack: func() *LinkedListStack[int] {
+				s := NewLinkedListStack[int]()
 				s.Push(1)
 				return s
 			}(),
@@ -186,19 +196,19 @@ func TestLinkedList_IsEmpty(t *testing.T) {
 func TestLinkedList_Size(t *testing.T) {
 	testCases := []struct {
 		name  string
-		stack *LinkedList[int]
+		stack *LinkedListStack[int]
 
 		wantSize int
 	}{
 		{
 			name:     "empty stack",
-			stack:    NewStackLinkedList[int](),
+			stack:    NewLinkedListStack[int](),
 			wantSize: 0,
 		},
 		{
 			name: "non-empty stack",
-			stack: func() *LinkedList[int] {
-				s := NewStackLinkedList[int]()
+			stack: func() *LinkedListStack[int] {
+				s := NewLinkedListStack[int]()
 				s.Push(1)
 				return s
 			}(),

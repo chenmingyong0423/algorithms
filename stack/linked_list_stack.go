@@ -14,52 +14,54 @@
 
 package stack
 
+var _ Stack[any] = (*LinkedListStack[any])(nil)
+
 type node[T any] struct {
 	Val  T
 	Next *node[T]
 }
 
-type LinkedList[T any] struct {
+type LinkedListStack[T any] struct {
 	top  *node[T]
 	size int
 }
 
-func NewStackLinkedList[T any]() *LinkedList[T] {
-	return &LinkedList[T]{}
+func NewLinkedListStack[T any]() *LinkedListStack[T] {
+	return &LinkedListStack[T]{}
 }
 
-func (l *LinkedList[T]) Push(e T) {
+func (l *LinkedListStack[T]) Push(e T) {
 	n := &node[T]{Val: e}
 	n.Next = l.top
 	l.top = n
 	l.size++
 }
 
-func (l *LinkedList[T]) Pop() (t T) {
+func (l *LinkedListStack[T]) Pop() (t T, b bool) {
 	if !l.IsEmpty() {
-		t = l.top.Val
+		t, b = l.top.Val, true
 		l.top = l.top.Next
 		l.size--
 	}
-	return t
+	return
 }
 
-func (l *LinkedList[T]) Peek() (t T) {
+func (l *LinkedListStack[T]) Peek() (t T, b bool) {
 	if !l.IsEmpty() {
-		t = l.top.Val
+		t, b = l.top.Val, true
 	}
-	return t
+	return
 }
 
-func (l *LinkedList[T]) IsEmpty() bool {
+func (l *LinkedListStack[T]) IsEmpty() bool {
 	return l.size == 0
 }
 
-func (l *LinkedList[T]) Size() int {
+func (l *LinkedListStack[T]) Size() int {
 	return l.size
 }
 
-func (l *LinkedList[T]) toSlice() (elements []T) {
+func (l *LinkedListStack[T]) toSlice() (elements []T) {
 	cur := l.top
 	for cur != nil {
 		elements = append(elements, cur.Val)
