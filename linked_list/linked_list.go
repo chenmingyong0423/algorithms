@@ -18,11 +18,11 @@ type LinkedList[T any] interface {
 	Add(elements ...T)
 	Append(elements ...T)
 	Prepend(elements ...T)
-	Get(index int) (T, bool)
 	GetFirst() (T, bool)
 	GetLast() (T, bool)
+	Get(index int) (T, bool)
 	Set(index int, e T) bool
-	Insert(index int, e ...T) bool
+	Insert(index int, elements ...T) bool
 	RemoveFirst() (T, bool)
 	RemoveLast() (T, bool)
 	Remove(index int) (T, bool)

@@ -14,6 +14,8 @@
 
 package linked_list
 
+var _ LinkedList[any] = (*SinglyLinkedList[any])(nil)
+
 type singlyNode[T any] struct {
 	Val  T
 	Next *singlyNode[T]
@@ -113,28 +115,28 @@ func (s *SinglyLinkedList[T]) Set(index int, e T) bool {
 }
 
 // Insert inserts the specified elements at the specified position in the list.
-func (s *SinglyLinkedList[T]) Insert(index int, e ...T) bool {
+func (s *SinglyLinkedList[T]) Insert(index int, elements ...T) bool {
 	if s.isInvalidIndex(index) {
 		if index == 0 {
-			s.Add(e...)
+			s.Add(elements...)
 			return true
 		}
 		return false
 	}
 
 	if index == 0 {
-		s.Prepend(e...)
+		s.Prepend(elements...)
 		return true
 	}
 	if index == s.Size()-1 {
-		s.Append(e...)
+		s.Append(elements...)
 		return true
 	}
 	prev := s.head
 	for i := 0; i < index-1; i, prev = i+1, prev.Next {
 	}
 	oldNext := prev.Next
-	for _, val := range e {
+	for _, val := range elements {
 		node := &singlyNode[T]{Val: val}
 		prev.Next = node
 		prev = node
@@ -159,6 +161,8 @@ func (s *SinglyLinkedList[T]) RemoveFirst() (t T, b bool) {
 	return node.Val, true
 }
 
+// RemoveLast removes the last element from the list.
+// If the list is empty, b return false
 func (s *SinglyLinkedList[T]) RemoveLast() (t T, b bool) {
 	if s.IsEmpty() {
 		return
@@ -198,7 +202,8 @@ func (s *SinglyLinkedList[T]) Remove(index int) (t T, b bool) {
 	node := prev.Next
 	prev.Next = node.Next
 	s.size--
-	return node.Val, true
+	t, node = node.Val, nil
+	return t, true
 }
 
 // IsEmpty checks whether the list is empty
@@ -223,6 +228,7 @@ func (s *SinglyLinkedList[T]) Clear() {
 	s.size = 0
 }
 
+// ToSlice returns a slice containing all the elements in this list.
 func (s *SinglyLinkedList[T]) ToSlice() []T {
 	elements := make([]T, 0, s.Size())
 	node := s.head
