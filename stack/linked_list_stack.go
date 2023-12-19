@@ -14,58 +14,40 @@
 
 package stack
 
+import linkedlist "github.com/chenmingyong0423/algorithms/linked_list"
+
 var _ Stack[any] = (*LinkedListStack[any])(nil)
 
-type node[T any] struct {
-	Val  T
-	Next *node[T]
-}
-
 type LinkedListStack[T any] struct {
-	top  *node[T]
-	size int
+	list linkedlist.LinkedList[T]
 }
 
 func NewLinkedListStack[T any]() *LinkedListStack[T] {
-	return &LinkedListStack[T]{}
+	return &LinkedListStack[T]{
+		list: linkedlist.NewSinglyLinkedList[T](),
+	}
 }
 
 func (l *LinkedListStack[T]) Push(e T) {
-	n := &node[T]{Val: e}
-	n.Next = l.top
-	l.top = n
-	l.size++
+	l.list.Add(e)
 }
 
 func (l *LinkedListStack[T]) Pop() (t T, b bool) {
-	if !l.IsEmpty() {
-		t, b = l.top.Val, true
-		l.top = l.top.Next
-		l.size--
-	}
-	return
+	return l.list.RemoveLast()
 }
 
 func (l *LinkedListStack[T]) Peek() (t T, b bool) {
-	if !l.IsEmpty() {
-		t, b = l.top.Val, true
-	}
-	return
+	return l.list.GetLast()
 }
 
 func (l *LinkedListStack[T]) IsEmpty() bool {
-	return l.size == 0
+	return l.list.IsEmpty()
 }
 
 func (l *LinkedListStack[T]) Size() int {
-	return l.size
+	return l.list.Size()
 }
 
 func (l *LinkedListStack[T]) toSlice() (elements []T) {
-	cur := l.top
-	for cur != nil {
-		elements = append(elements, cur.Val)
-		cur = cur.Next
-	}
-	return
+	return l.list.ToSlice()
 }
