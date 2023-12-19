@@ -30,4 +30,5 @@ type LinkedList[T any] interface {
 	Size() int
 	Clear()
 	ToSlice() []T
+	Reverse()
 }

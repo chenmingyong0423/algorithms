@@ -630,3 +630,34 @@ func TestDoublyLinkedList_ToSlice(t *testing.T) {
 		})
 	}
 }
+
+func TestDoublyLinkedList_Reverse(t *testing.T) {
+	testCases := []struct {
+		name string
+		list *DoublyLinkedList[int]
+
+		wantListElements []int
+	}{
+		{
+			name:             "empty list",
+			list:             NewDoublyLinkedList[int](),
+			wantListElements: []int{},
+		},
+		{
+			name:             "list with one element",
+			list:             NewDoublyLinkedList[int](1),
+			wantListElements: []int{1},
+		},
+		{
+			name:             "list with more than one element",
+			list:             NewDoublyLinkedList[int](1, 2, 3),
+			wantListElements: []int{3, 2, 1},
+		},
+	}
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			tc.list.Reverse()
+			assert.Equal(t, tc.wantListElements, tc.list.ToSlice())
+		})
+	}
+}

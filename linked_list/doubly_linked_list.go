@@ -241,3 +241,17 @@ func (l *DoublyLinkedList[T]) ToSlice() []T {
 func (l *DoublyLinkedList[T]) isInvalidIndex(index int) bool {
 	return index < 0 || index > l.Size()-1
 }
+
+// Reverse reverses the list
+func (l *DoublyLinkedList[T]) Reverse() {
+	var prev, next *doublyNode[T]
+	cur := l.head
+	for cur != nil {
+		next = cur.Next
+		cur.Next = prev
+		cur.Prev = next
+		prev = cur
+		cur = next
+	}
+	l.head = prev
+}

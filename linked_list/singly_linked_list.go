@@ -38,64 +38,64 @@ func NewSinglyLinkedList[T any](elements ...T) *SinglyLinkedList[T] {
 }
 
 // Add appends the specified elements to the end of the list.(same as Append)
-func (s *SinglyLinkedList[T]) Add(elements ...T) {
+func (l *SinglyLinkedList[T]) Add(elements ...T) {
 	if len(elements) > 0 {
 		for _, e := range elements {
 			node := &singlyNode[T]{Val: e}
-			if s.IsEmpty() {
-				s.head, s.tail = node, node
+			if l.IsEmpty() {
+				l.head, l.tail = node, node
 			} else {
-				s.tail.Next = node
-				s.tail = node
+				l.tail.Next = node
+				l.tail = node
 			}
-			s.size++
+			l.size++
 		}
 	}
 }
 
 // Append appends the specified elements to the end of the list.(same as Add)
-func (s *SinglyLinkedList[T]) Append(elements ...T) {
-	s.Add(elements...)
+func (l *SinglyLinkedList[T]) Append(elements ...T) {
+	l.Add(elements...)
 }
 
 // Prepend prepends the specified elements to the beginning of the list.
-func (s *SinglyLinkedList[T]) Prepend(elements ...T) {
+func (l *SinglyLinkedList[T]) Prepend(elements ...T) {
 	// reverse the elements. i.e. original elements: [2, 3], prepend elements: [0, 1], result: [0, 1, 2, 3]
 	for i := len(elements) - 1; i >= 0; i-- {
-		node := &singlyNode[T]{Val: elements[i], Next: s.head}
-		s.head = node
-		if s.size == 0 {
-			s.tail = node
+		node := &singlyNode[T]{Val: elements[i], Next: l.head}
+		l.head = node
+		if l.size == 0 {
+			l.tail = node
 		}
-		s.size++
+		l.size++
 	}
 }
 
 // GetFirst returns the first element in the list.
 // If the list is empty, b return false
-func (s *SinglyLinkedList[T]) GetFirst() (t T, b bool) {
-	if s.IsEmpty() {
+func (l *SinglyLinkedList[T]) GetFirst() (t T, b bool) {
+	if l.IsEmpty() {
 		return
 	}
-	return s.head.Val, true
+	return l.head.Val, true
 }
 
 // GetLast returns the last element in the list.
 // If the list is empty, b return false
-func (s *SinglyLinkedList[T]) GetLast() (t T, b bool) {
-	if s.IsEmpty() {
+func (l *SinglyLinkedList[T]) GetLast() (t T, b bool) {
+	if l.IsEmpty() {
 		return
 	}
-	return s.tail.Val, true
+	return l.tail.Val, true
 }
 
 // Get returns the element at the specified position in the list.
 // If the index is invalid, b return false
-func (s *SinglyLinkedList[T]) Get(index int) (t T, b bool) {
-	if s.isInvalidIndex(index) {
+func (l *SinglyLinkedList[T]) Get(index int) (t T, b bool) {
+	if l.isInvalidIndex(index) {
 		return
 	}
-	node := s.head
+	node := l.head
 	for i := 0; i < index; i, node = i+1, node.Next {
 	}
 	return node.Val, true
@@ -103,11 +103,11 @@ func (s *SinglyLinkedList[T]) Get(index int) (t T, b bool) {
 
 // Set sets the element at the specified position in the list.
 // If the index is invalid, b return false
-func (s *SinglyLinkedList[T]) Set(index int, e T) bool {
-	if index < 0 || index > s.Size()-1 {
+func (l *SinglyLinkedList[T]) Set(index int, e T) bool {
+	if index < 0 || index > l.Size()-1 {
 		return false
 	}
-	node := s.head
+	node := l.head
 	for i := 0; i < index; i, node = i+1, node.Next {
 	}
 	node.Val = e
@@ -115,24 +115,24 @@ func (s *SinglyLinkedList[T]) Set(index int, e T) bool {
 }
 
 // Insert inserts the specified elements at the specified position in the list.
-func (s *SinglyLinkedList[T]) Insert(index int, elements ...T) bool {
-	if s.isInvalidIndex(index) {
+func (l *SinglyLinkedList[T]) Insert(index int, elements ...T) bool {
+	if l.isInvalidIndex(index) {
 		if index == 0 {
-			s.Add(elements...)
+			l.Add(elements...)
 			return true
 		}
 		return false
 	}
 
 	if index == 0 {
-		s.Prepend(elements...)
+		l.Prepend(elements...)
 		return true
 	}
-	if index == s.Size()-1 {
-		s.Append(elements...)
+	if index == l.Size()-1 {
+		l.Append(elements...)
 		return true
 	}
-	prev := s.head
+	prev := l.head
 	for i := 0; i < index-1; i, prev = i+1, prev.Next {
 	}
 	oldNext := prev.Next
@@ -140,7 +140,7 @@ func (s *SinglyLinkedList[T]) Insert(index int, elements ...T) bool {
 		node := &singlyNode[T]{Val: val}
 		prev.Next = node
 		prev = node
-		s.size++
+		l.size++
 	}
 	prev.Next = oldNext
 	return true
@@ -148,93 +148,106 @@ func (s *SinglyLinkedList[T]) Insert(index int, elements ...T) bool {
 
 // RemoveFirst removes the first element from the list.
 // If the list is empty, b return false
-func (s *SinglyLinkedList[T]) RemoveFirst() (t T, b bool) {
-	if s.IsEmpty() {
+func (l *SinglyLinkedList[T]) RemoveFirst() (t T, b bool) {
+	if l.IsEmpty() {
 		return
 	}
-	node := s.head
-	s.head = node.Next
-	s.size--
-	if s.IsEmpty() {
-		s.tail = nil
+	node := l.head
+	l.head = node.Next
+	l.size--
+	if l.IsEmpty() {
+		l.tail = nil
 	}
 	return node.Val, true
 }
 
 // RemoveLast removes the last element from the list.
 // If the list is empty, b return false
-func (s *SinglyLinkedList[T]) RemoveLast() (t T, b bool) {
-	if s.IsEmpty() {
+func (l *SinglyLinkedList[T]) RemoveLast() (t T, b bool) {
+	if l.IsEmpty() {
 		return
 	}
-	if s.Size() == 1 {
-		return s.RemoveFirst()
+	if l.Size() == 1 {
+		return l.RemoveFirst()
 	}
-	prev := s.head
-	for prev.Next != s.tail {
+	prev := l.head
+	for prev.Next != l.tail {
 		prev = prev.Next
 	}
 	node := prev.Next
 	prev.Next = nil
-	s.tail = prev
-	s.size--
+	l.tail = prev
+	l.size--
 	return node.Val, true
 }
 
 // Remove removes the element at the specified position in the list.
 // If the index is invalid, b return false
-func (s *SinglyLinkedList[T]) Remove(index int) (t T, b bool) {
-	if s.isInvalidIndex(index) {
+func (l *SinglyLinkedList[T]) Remove(index int) (t T, b bool) {
+	if l.isInvalidIndex(index) {
 		return
 	}
-	if s.Size() == 1 {
-		return s.RemoveFirst()
+	if l.Size() == 1 {
+		return l.RemoveFirst()
 	}
-	if index == s.Size()-1 {
-		return s.RemoveLast()
+	if index == l.Size()-1 {
+		return l.RemoveLast()
 	}
 
-	prev := s.head
+	prev := l.head
 	// find the previous node of the node to be deleted
 	for i := 0; i < index-1; i, prev = i+1, prev.Next {
 	}
 
 	node := prev.Next
 	prev.Next = node.Next
-	s.size--
+	l.size--
 	t, node = node.Val, nil
 	return t, true
 }
 
 // IsEmpty checks whether the list is empty
-func (s *SinglyLinkedList[T]) IsEmpty() bool {
-	return s.Size() == 0
+func (l *SinglyLinkedList[T]) IsEmpty() bool {
+	return l.Size() == 0
 }
 
 // Size returns the size of the list
-func (s *SinglyLinkedList[T]) Size() int {
-	return s.size
+func (l *SinglyLinkedList[T]) Size() int {
+	return l.size
 }
 
 // isInvalidIndex checks whether the index is invalid
-func (s *SinglyLinkedList[T]) isInvalidIndex(index int) bool {
-	return index < 0 || index > s.Size()-1
+func (l *SinglyLinkedList[T]) isInvalidIndex(index int) bool {
+	return index < 0 || index > l.Size()-1
 }
 
 // Clear removes all the elements from the list
-func (s *SinglyLinkedList[T]) Clear() {
-	s.head = nil
-	s.tail = nil
-	s.size = 0
+func (l *SinglyLinkedList[T]) Clear() {
+	l.head = nil
+	l.tail = nil
+	l.size = 0
 }
 
 // ToSlice returns a slice containing all the elements in this list.
-func (s *SinglyLinkedList[T]) ToSlice() []T {
-	elements := make([]T, 0, s.Size())
-	node := s.head
+func (l *SinglyLinkedList[T]) ToSlice() []T {
+	elements := make([]T, 0, l.Size())
+	node := l.head
 	for node != nil {
 		elements = append(elements, node.Val)
 		node = node.Next
 	}
 	return elements
+}
+
+// Reverse reverses the list
+func (l *SinglyLinkedList[T]) Reverse() {
+	var prev, next *singlyNode[T]
+	cur := l.head
+	for cur != nil {
+		next = cur.Next
+		cur.Next = prev
+		prev = cur
+		cur = next
+	}
+	l.head = prev
 }

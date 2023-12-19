@@ -630,3 +630,33 @@ func TestSinglyLinkedList_Insert(t *testing.T) {
 		})
 	}
 }
+
+func TestSinglyLinkedList_Reverse(t *testing.T) {
+	testCases := []struct {
+		name             string
+		list             *SinglyLinkedList[int]
+		wantListElements []int
+	}{
+		{
+			name:             "reverse empty list",
+			list:             NewSinglyLinkedList[int](),
+			wantListElements: []int{},
+		},
+		{
+			name:             "reverse list with one element",
+			list:             NewSinglyLinkedList[int](1),
+			wantListElements: []int{1},
+		},
+		{
+			name:             "reverse list with more than one element",
+			list:             NewSinglyLinkedList[int](1, 2, 3),
+			wantListElements: []int{3, 2, 1},
+		},
+	}
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			tc.list.Reverse()
+			assert.Equal(t, tc.wantListElements, tc.list.ToSlice())
+		})
+	}
+}
