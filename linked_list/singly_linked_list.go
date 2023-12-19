@@ -17,8 +17,8 @@ package linkedlist
 var _ LinkedList[any] = (*SinglyLinkedList[any])(nil)
 
 type singlyNode[T any] struct {
-	Val  T
-	Next *singlyNode[T]
+	val  T
+	next *singlyNode[T]
 }
 
 type SinglyLinkedList[T any] struct {
@@ -41,11 +41,11 @@ func NewSinglyLinkedList[T any](elements ...T) *SinglyLinkedList[T] {
 func (l *SinglyLinkedList[T]) Add(elements ...T) {
 	if len(elements) > 0 {
 		for _, e := range elements {
-			node := &singlyNode[T]{Val: e}
+			node := &singlyNode[T]{val: e}
 			if l.IsEmpty() {
 				l.head, l.tail = node, node
 			} else {
-				l.tail.Next = node
+				l.tail.next = node
 				l.tail = node
 			}
 			l.size++
@@ -62,7 +62,7 @@ func (l *SinglyLinkedList[T]) Append(elements ...T) {
 func (l *SinglyLinkedList[T]) Prepend(elements ...T) {
 	// reverse the elements. i.e. original elements: [2, 3], prepend elements: [0, 1], result: [0, 1, 2, 3]
 	for i := len(elements) - 1; i >= 0; i-- {
-		node := &singlyNode[T]{Val: elements[i], Next: l.head}
+		node := &singlyNode[T]{val: elements[i], next: l.head}
 		l.head = node
 		if l.size == 0 {
 			l.tail = node
@@ -77,7 +77,7 @@ func (l *SinglyLinkedList[T]) GetFirst() (t T, b bool) {
 	if l.IsEmpty() {
 		return
 	}
-	return l.head.Val, true
+	return l.head.val, true
 }
 
 // GetLast returns the last element in the list.
@@ -86,7 +86,7 @@ func (l *SinglyLinkedList[T]) GetLast() (t T, b bool) {
 	if l.IsEmpty() {
 		return
 	}
-	return l.tail.Val, true
+	return l.tail.val, true
 }
 
 // Get returns the element at the specified position in the list.
@@ -96,9 +96,9 @@ func (l *SinglyLinkedList[T]) Get(index int) (t T, b bool) {
 		return
 	}
 	node := l.head
-	for i := 0; i < index; i, node = i+1, node.Next {
+	for i := 0; i < index; i, node = i+1, node.next {
 	}
-	return node.Val, true
+	return node.val, true
 }
 
 // Set sets the element at the specified position in the list.
@@ -108,9 +108,9 @@ func (l *SinglyLinkedList[T]) Set(index int, e T) bool {
 		return false
 	}
 	node := l.head
-	for i := 0; i < index; i, node = i+1, node.Next {
+	for i := 0; i < index; i, node = i+1, node.next {
 	}
-	node.Val = e
+	node.val = e
 	return true
 }
 
@@ -133,16 +133,16 @@ func (l *SinglyLinkedList[T]) Insert(index int, elements ...T) bool {
 		return true
 	}
 	prev := l.head
-	for i := 0; i < index-1; i, prev = i+1, prev.Next {
+	for i := 0; i < index-1; i, prev = i+1, prev.next {
 	}
-	oldNext := prev.Next
+	oldNext := prev.next
 	for _, val := range elements {
-		node := &singlyNode[T]{Val: val}
-		prev.Next = node
+		node := &singlyNode[T]{val: val}
+		prev.next = node
 		prev = node
 		l.size++
 	}
-	prev.Next = oldNext
+	prev.next = oldNext
 	return true
 }
 
@@ -153,12 +153,12 @@ func (l *SinglyLinkedList[T]) RemoveFirst() (t T, b bool) {
 		return
 	}
 	node := l.head
-	l.head = node.Next
+	l.head = node.next
 	l.size--
 	if l.IsEmpty() {
 		l.tail = nil
 	}
-	return node.Val, true
+	return node.val, true
 }
 
 // RemoveLast removes the last element from the list.
@@ -171,14 +171,14 @@ func (l *SinglyLinkedList[T]) RemoveLast() (t T, b bool) {
 		return l.RemoveFirst()
 	}
 	prev := l.head
-	for prev.Next != l.tail {
-		prev = prev.Next
+	for prev.next != l.tail {
+		prev = prev.next
 	}
-	node := prev.Next
-	prev.Next = nil
+	node := prev.next
+	prev.next = nil
 	l.tail = prev
 	l.size--
-	return node.Val, true
+	return node.val, true
 }
 
 // Remove removes the element at the specified position in the list.
@@ -196,13 +196,13 @@ func (l *SinglyLinkedList[T]) Remove(index int) (t T, b bool) {
 
 	prev := l.head
 	// find the previous node of the node to be deleted
-	for i := 0; i < index-1; i, prev = i+1, prev.Next {
+	for i := 0; i < index-1; i, prev = i+1, prev.next {
 	}
 
-	node := prev.Next
-	prev.Next = node.Next
+	node := prev.next
+	prev.next = node.next
 	l.size--
-	t, node = node.Val, nil
+	t, node = node.val, nil
 	return t, true
 }
 
@@ -228,13 +228,13 @@ func (l *SinglyLinkedList[T]) Clear() {
 	l.size = 0
 }
 
-// ToSlice returns a slice containing all the elements in this list.
+// Values returns a slice containing all the elements in this list.
 func (l *SinglyLinkedList[T]) Values() []T {
 	elements := make([]T, 0, l.Size())
 	node := l.head
 	for node != nil {
-		elements = append(elements, node.Val)
-		node = node.Next
+		elements = append(elements, node.val)
+		node = node.next
 	}
 	return elements
 }
@@ -244,8 +244,8 @@ func (l *SinglyLinkedList[T]) Reverse() {
 	var prev, next *singlyNode[T]
 	cur := l.head
 	for cur != nil {
-		next = cur.Next
-		cur.Next = prev
+		next = cur.next
+		cur.next = prev
 		prev = cur
 		cur = next
 	}

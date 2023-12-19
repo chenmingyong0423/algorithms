@@ -17,9 +17,9 @@ package linkedlist
 var _ LinkedList[any] = (*DoublyLinkedList[any])(nil)
 
 type doublyNode[T any] struct {
-	Val  T
-	Prev *doublyNode[T]
-	Next *doublyNode[T]
+	val  T
+	prev *doublyNode[T]
+	next *doublyNode[T]
 }
 
 type DoublyLinkedList[T any] struct {
@@ -42,11 +42,11 @@ func NewDoublyLinkedList[T any](elements ...T) *DoublyLinkedList[T] {
 func (l *DoublyLinkedList[T]) Add(elements ...T) {
 	if len(elements) > 0 {
 		for _, e := range elements {
-			node := &doublyNode[T]{Val: e, Prev: l.tail}
+			node := &doublyNode[T]{val: e, prev: l.tail}
 			if l.IsEmpty() {
 				l.head, l.tail = node, node
 			} else {
-				l.tail.Next = node
+				l.tail.next = node
 				l.tail = node
 			}
 			l.size++
@@ -62,11 +62,11 @@ func (l *DoublyLinkedList[T]) Append(elements ...T) {
 // Prepend prepends the specified elements to the beginning of the list.
 func (l *DoublyLinkedList[T]) Prepend(elements ...T) {
 	for i := len(elements) - 1; i >= 0; i-- {
-		node := &doublyNode[T]{Val: elements[i], Next: l.head}
+		node := &doublyNode[T]{val: elements[i], next: l.head}
 		if l.size == 0 {
 			l.tail = node
 		} else {
-			l.head.Prev = node
+			l.head.prev = node
 		}
 		l.head = node
 		l.size++
@@ -79,7 +79,7 @@ func (l *DoublyLinkedList[T]) GetFirst() (t T, b bool) {
 	if l.IsEmpty() {
 		return
 	}
-	return l.head.Val, true
+	return l.head.val, true
 }
 
 // GetLast returns the last element in the list.
@@ -88,7 +88,7 @@ func (l *DoublyLinkedList[T]) GetLast() (t T, b bool) {
 	if l.IsEmpty() {
 		return
 	}
-	return l.tail.Val, true
+	return l.tail.val, true
 }
 
 // Get returns the element at the specified position in the list.
@@ -98,15 +98,15 @@ func (l *DoublyLinkedList[T]) Get(index int) (t T, b bool) {
 		return
 	}
 	if index == 0 {
-		return l.head.Val, true
+		return l.head.val, true
 	}
 	if index == l.size-1 {
-		return l.tail.Val, true
+		return l.tail.val, true
 	}
 	node := l.head
-	for i := 0; i < index; i, node = i+1, node.Next {
+	for i := 0; i < index; i, node = i+1, node.next {
 	}
-	return node.Val, true
+	return node.val, true
 }
 
 // Set sets the element at the specified position in the list.
@@ -116,9 +116,9 @@ func (l *DoublyLinkedList[T]) Set(index int, e T) bool {
 		return false
 	}
 	node := l.head
-	for i := 0; i < index; i, node = i+1, node.Next {
+	for i := 0; i < index; i, node = i+1, node.next {
 	}
-	node.Val = e
+	node.val = e
 	return true
 }
 
@@ -140,16 +140,16 @@ func (l *DoublyLinkedList[T]) Insert(index int, elements ...T) bool {
 		return true
 	}
 	prev := l.head
-	for i := 0; i < index-1; i, prev = i+1, prev.Next {
+	for i := 0; i < index-1; i, prev = i+1, prev.next {
 	}
-	oldNext := prev.Next
+	oldNext := prev.next
 	for _, e := range elements {
-		node := &doublyNode[T]{Val: e, Prev: prev}
-		prev.Next = node
+		node := &doublyNode[T]{val: e, prev: prev}
+		prev.next = node
 		prev = node
 		l.size++
 	}
-	prev.Next = oldNext
+	prev.next = oldNext
 	return true
 }
 
@@ -160,14 +160,14 @@ func (l *DoublyLinkedList[T]) RemoveFirst() (t T, b bool) {
 		return
 	}
 	head := l.head
-	l.head = head.Next
+	l.head = head.next
 	l.size--
 	if l.IsEmpty() {
 		l.tail = nil
 	} else {
-		l.head.Prev = nil
+		l.head.prev = nil
 	}
-	return head.Val, true
+	return head.val, true
 }
 
 // RemoveLast removes the last element from the list.
@@ -180,10 +180,10 @@ func (l *DoublyLinkedList[T]) RemoveLast() (t T, b bool) {
 		return l.RemoveFirst()
 	}
 	tail := l.tail
-	l.tail = tail.Prev
-	l.tail.Next = nil
+	l.tail = tail.prev
+	l.tail.next = nil
 	l.size--
-	return tail.Val, true
+	return tail.val, true
 }
 
 // Remove removes the element at the specified position in the list.
@@ -199,13 +199,13 @@ func (l *DoublyLinkedList[T]) Remove(index int) (t T, b bool) {
 		return l.RemoveLast()
 	}
 	prev := l.head
-	for i := 0; i < index-1; i, prev = i+1, prev.Next {
+	for i := 0; i < index-1; i, prev = i+1, prev.next {
 	}
-	dst := prev.Next
-	prev.Next = dst.Next
-	dst.Next.Prev = prev
+	dst := prev.next
+	prev.next = dst.next
+	dst.next.prev = prev
 	l.size--
-	t, dst = dst.Val, nil
+	t, dst = dst.val, nil
 	return t, true
 }
 
@@ -226,13 +226,13 @@ func (l *DoublyLinkedList[T]) Clear() {
 	l.size = 0
 }
 
-// ToSlice returns a slice containing all the elements in this list.
+// Values returns a slice containing all the elements in this list.
 func (l *DoublyLinkedList[T]) Values() []T {
 	elements := make([]T, 0, l.Size())
 	node := l.head
 	for node != nil {
-		elements = append(elements, node.Val)
-		node = node.Next
+		elements = append(elements, node.val)
+		node = node.next
 	}
 	return elements
 }
@@ -247,9 +247,9 @@ func (l *DoublyLinkedList[T]) Reverse() {
 	var prev, next *doublyNode[T]
 	cur := l.head
 	for cur != nil {
-		next = cur.Next
-		cur.Next = prev
-		cur.Prev = next
+		next = cur.next
+		cur.next = prev
+		cur.prev = next
 		prev = cur
 		cur = next
 	}
