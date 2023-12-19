@@ -29,6 +29,6 @@ type LinkedList[T any] interface {
 	IsEmpty() bool
 	Size() int
 	Clear()
-	ToSlice() []T
+	Values() []T
 	Reverse()
 }

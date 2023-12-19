@@ -229,7 +229,7 @@ func (l *SinglyLinkedList[T]) Clear() {
 }
 
 // ToSlice returns a slice containing all the elements in this list.
-func (l *SinglyLinkedList[T]) ToSlice() []T {
+func (l *SinglyLinkedList[T]) Values() []T {
 	elements := make([]T, 0, l.Size())
 	node := l.head
 	for node != nil {

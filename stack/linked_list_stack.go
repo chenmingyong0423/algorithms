@@ -49,5 +49,5 @@ func (l *LinkedListStack[T]) Size() int {
 }
 
 func (l *LinkedListStack[T]) toSlice() (elements []T) {
-	return l.list.ToSlice()
+	return l.list.Values()
 }

@@ -120,10 +120,10 @@ func (l *ConcurrentLinkedList[T]) Clear() {
 	l.list.Clear()
 }
 
-func (l *ConcurrentLinkedList[T]) ToSlice() []T {
+func (l *ConcurrentLinkedList[T]) Values() []T {
 	l.lock.RLock()
 	defer l.lock.RUnlock()
-	return l.list.ToSlice()
+	return l.list.Values()
 }
 
 func (l *ConcurrentLinkedList[T]) Reverse() {

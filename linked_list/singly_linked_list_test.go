@@ -56,7 +56,7 @@ func TestSinglyLinkedList_Add(t *testing.T) {
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
 			tc.list.Add(tc.elements...)
-			assert.Equal(t, tc.wantListElements, tc.list.ToSlice())
+			assert.Equal(t, tc.wantListElements, tc.list.Values())
 		})
 	}
 }
@@ -97,7 +97,7 @@ func TestSinglyLinkedList_Append(t *testing.T) {
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
 			tc.list.Append(tc.elements...)
-			assert.Equal(t, tc.wantListElements, tc.list.ToSlice())
+			assert.Equal(t, tc.wantListElements, tc.list.Values())
 		})
 	}
 }
@@ -138,7 +138,7 @@ func TestSinglyLinkedList_Prepend(t *testing.T) {
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
 			tc.list.Prepend(tc.elements...)
-			assert.Equal(t, tc.wantListElements, tc.list.ToSlice())
+			assert.Equal(t, tc.wantListElements, tc.list.Values())
 		})
 	}
 }
@@ -533,7 +533,7 @@ func TestSinglyLinkedList_ToSlice(t *testing.T) {
 	}
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			got := tc.list.ToSlice()
+			got := tc.list.Values()
 			assert.Equal(t, tc.want, got)
 		})
 	}
@@ -625,7 +625,7 @@ func TestSinglyLinkedList_Insert(t *testing.T) {
 			got := tc.list.Insert(tc.index, tc.elements...)
 			assert.Equal(t, tc.wantBool, got)
 			if got {
-				assert.Equal(t, tc.wantListElements, tc.list.ToSlice())
+				assert.Equal(t, tc.wantListElements, tc.list.Values())
 			}
 		})
 	}
@@ -656,7 +656,7 @@ func TestSinglyLinkedList_Reverse(t *testing.T) {
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
 			tc.list.Reverse()
-			assert.Equal(t, tc.wantListElements, tc.list.ToSlice())
+			assert.Equal(t, tc.wantListElements, tc.list.Values())
 		})
 	}
 }
