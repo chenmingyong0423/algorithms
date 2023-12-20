@@ -104,7 +104,7 @@ func (l *SinglyLinkedList[T]) Get(index int) (t T, b bool) {
 // Set sets the element at the specified position in the list.
 // If the index is invalid, b return false
 func (l *SinglyLinkedList[T]) Set(index int, e T) bool {
-	if index < 0 || index > l.Size()-1 {
+	if l.isInvalidIndex(index) {
 		return false
 	}
 	node := l.head
