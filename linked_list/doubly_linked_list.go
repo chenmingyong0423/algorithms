@@ -244,10 +244,10 @@ func (l *DoublyLinkedList[T]) isInvalidIndex(index int) bool {
 
 // Reverse reverses the list
 func (l *DoublyLinkedList[T]) Reverse() {
-	var prev, next *doublyNode[T]
+	var prev *doublyNode[T]
 	cur := l.head
 	for cur != nil {
-		next = cur.next
+		next := cur.next
 		cur.next = prev
 		cur.prev = next
 		prev = cur

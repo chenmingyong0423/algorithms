@@ -241,10 +241,10 @@ func (l *SinglyLinkedList[T]) Values() []T {
 
 // Reverse reverses the list
 func (l *SinglyLinkedList[T]) Reverse() {
-	var prev, next *singlyNode[T]
+	var prev *singlyNode[T]
 	cur := l.head
 	for cur != nil {
-		next = cur.next
+		next := cur.next
 		cur.next = prev
 		prev = cur
 		cur = next
