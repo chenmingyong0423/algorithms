@@ -16,15 +16,15 @@ package linkedlist
 
 var _ LinkedList[any] = (*DoublyLinkedList[any])(nil)
 
-type doublyNode[T any] struct {
+type DoublyNode[T any] struct {
 	val  T
-	prev *doublyNode[T]
-	next *doublyNode[T]
+	prev *DoublyNode[T]
+	next *DoublyNode[T]
 }
 
 type DoublyLinkedList[T any] struct {
-	head *doublyNode[T]
-	tail *doublyNode[T]
+	head *DoublyNode[T]
+	tail *DoublyNode[T]
 	size int
 }
 
@@ -42,7 +42,7 @@ func NewDoublyLinkedList[T any](elements ...T) *DoublyLinkedList[T] {
 func (l *DoublyLinkedList[T]) Add(elements ...T) {
 	if len(elements) > 0 {
 		for _, e := range elements {
-			node := &doublyNode[T]{val: e, prev: l.tail}
+			node := &DoublyNode[T]{val: e, prev: l.tail}
 			if l.IsEmpty() {
 				l.head, l.tail = node, node
 			} else {
@@ -62,7 +62,7 @@ func (l *DoublyLinkedList[T]) Append(elements ...T) {
 // Prepend prepends the specified elements to the beginning of the list.
 func (l *DoublyLinkedList[T]) Prepend(elements ...T) {
 	for i := len(elements) - 1; i >= 0; i-- {
-		node := &doublyNode[T]{val: elements[i], next: l.head}
+		node := &DoublyNode[T]{val: elements[i], next: l.head}
 		if l.size == 0 {
 			l.tail = node
 		} else {
@@ -144,7 +144,7 @@ func (l *DoublyLinkedList[T]) Insert(index int, elements ...T) bool {
 	}
 	oldNext := prev.next
 	for _, e := range elements {
-		node := &doublyNode[T]{val: e, prev: prev}
+		node := &DoublyNode[T]{val: e, prev: prev}
 		prev.next = node
 		prev = node
 		l.size++
@@ -244,7 +244,7 @@ func (l *DoublyLinkedList[T]) isInvalidIndex(index int) bool {
 
 // Reverse reverses the list
 func (l *DoublyLinkedList[T]) Reverse() {
-	var prev *doublyNode[T]
+	var prev *DoublyNode[T]
 	cur := l.head
 	for cur != nil {
 		next := cur.next

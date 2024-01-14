@@ -16,14 +16,14 @@ package linkedlist
 
 var _ LinkedList[any] = (*SinglyLinkedList[any])(nil)
 
-type singlyNode[T any] struct {
+type SinglyNode[T any] struct {
 	val  T
-	next *singlyNode[T]
+	next *SinglyNode[T]
 }
 
 type SinglyLinkedList[T any] struct {
-	head *singlyNode[T]
-	tail *singlyNode[T]
+	head *SinglyNode[T]
+	tail *SinglyNode[T]
 	size int
 }
 
@@ -41,7 +41,7 @@ func NewSinglyLinkedList[T any](elements ...T) *SinglyLinkedList[T] {
 func (l *SinglyLinkedList[T]) Add(elements ...T) {
 	if len(elements) > 0 {
 		for _, e := range elements {
-			node := &singlyNode[T]{val: e}
+			node := &SinglyNode[T]{val: e}
 			if l.IsEmpty() {
 				l.head, l.tail = node, node
 			} else {
@@ -62,7 +62,7 @@ func (l *SinglyLinkedList[T]) Append(elements ...T) {
 func (l *SinglyLinkedList[T]) Prepend(elements ...T) {
 	// reverse the elements. i.e. original elements: [2, 3], prepend elements: [0, 1], result: [0, 1, 2, 3]
 	for i := len(elements) - 1; i >= 0; i-- {
-		node := &singlyNode[T]{val: elements[i], next: l.head}
+		node := &SinglyNode[T]{val: elements[i], next: l.head}
 		l.head = node
 		if l.size == 0 {
 			l.tail = node
@@ -137,7 +137,7 @@ func (l *SinglyLinkedList[T]) Insert(index int, elements ...T) bool {
 	}
 	oldNext := prev.next
 	for _, val := range elements {
-		node := &singlyNode[T]{val: val}
+		node := &SinglyNode[T]{val: val}
 		prev.next = node
 		prev = node
 		l.size++
@@ -241,7 +241,7 @@ func (l *SinglyLinkedList[T]) Values() []T {
 
 // Reverse reverses the list
 func (l *SinglyLinkedList[T]) Reverse() {
-	var prev *singlyNode[T]
+	var prev *SinglyNode[T]
 	cur := l.head
 	for cur != nil {
 		next := cur.next
